@@ -1,0 +1,5 @@
+org/word/count/test/userio/CountOutputter.class
+org/word/count/test/models/FileWordStatistics.class
+org/word/count/test/statisticsgeneration/WordCounter.class
+org/word/count/test/App.class
+org/word/count/test/statisticsgeneration/WordCountStatisticsGenerator.class

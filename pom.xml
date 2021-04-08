@@ -7,6 +7,12 @@
     <groupId>org.word.count.test</groupId>
     <artifactId>wordCounterTest</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>15</maven.compiler.source>
+        <maven.compiler.target>15</maven.compiler.target>
+    </properties>
+    
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -37,16 +43,17 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.11</version>
         </dependency>
-    </dependencies>
 
-    <properties>
-        <maven.compiler.source>15</maven.compiler.source>
-        <maven.compiler.target>15</maven.compiler.target>
-    </properties>
+    </dependencies>
 
     <build>
         <plugins>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.1</version>
+            </plugin>
             <!-- For if a fat jar is needed -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

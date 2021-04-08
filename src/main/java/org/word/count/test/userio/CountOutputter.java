@@ -17,8 +17,9 @@ public class CountOutputter {
 
     public void output(FileWordStatistics stats){
 
+
         formatAndPrint(FILENAME_OUTPUT_TEMPLATE, stats.getId());
-        formatAndPrint(AVERAGE_LENGTH_OUTPUT_TEMPLATE, stats.getAveragelength());
+        formatAndPrint(AVERAGE_LENGTH_OUTPUT_TEMPLATE, stats.getAverageLength());
         formatAndPrint(WORD_COUNT_OUTPUT_TEMPLATE, stats.getWordCount());
         for (Map.Entry<Integer, Long> lengthToCount : stats.getLengthDistribution().entrySet()) {
             String connectedKV = String.format(LENGTH_TO_FREQUENCY_INDIV_TEMPLATE, lengthToCount.getKey(), lengthToCount.getValue());

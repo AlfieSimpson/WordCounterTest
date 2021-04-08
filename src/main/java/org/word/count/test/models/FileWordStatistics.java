@@ -1,35 +1,37 @@
 package org.word.count.test.models;
 
-import java.util.HashSet;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import java.util.Map;
+import java.util.Set;
 
 public class FileWordStatistics {
 
     private String id;
-    private Double averagelength;
+    private Double averageLength;
     private Long wordCount;
     private Map<Integer, Long> lengthDistribution;
-    private HashSet<Integer> mostFrequent;
+    private Set<Integer> mostFrequent;
 
     public FileWordStatistics(String id,
-                              Double averagelength,
+                              Double averageLength,
                               Long wordCount,
                               Map<Integer, Long> lengthDistribution,
-                              HashSet<Integer> mostFrequent) {
+                              Set<Integer> mostFrequent) {
         this.id = id;
-        this.averagelength = averagelength;
+        this.averageLength = averageLength;
         this.wordCount = wordCount;
         this.lengthDistribution = lengthDistribution;
         this.mostFrequent = mostFrequent;
     }
 
 
-    public Double getAveragelength() {
-        return averagelength;
+    public Double getAverageLength() {
+        return averageLength;
     }
 
-    public void setAveragelength(Double averagelength) {
-        this.averagelength = averagelength;
+    public void setAverageLength(Double averageLength) {
+        this.averageLength = averageLength;
     }
 
     public Long getWordCount() {
@@ -56,12 +58,18 @@ public class FileWordStatistics {
         this.id = id;
     }
 
-    public HashSet<Integer> getMostFrequent() {
+    public Set<Integer> getMostFrequent() {
         return mostFrequent;
     }
 
-    public void setMostFrequent(HashSet<Integer> mostFrequent) {
+    public void setMostFrequent(Set<Integer> mostFrequent) {
         this.mostFrequent = mostFrequent;
     }
+
+    @Override
+    public boolean equals(Object o){
+        return EqualsBuilder.reflectionEquals(this,o);
+    }
+
 }
 

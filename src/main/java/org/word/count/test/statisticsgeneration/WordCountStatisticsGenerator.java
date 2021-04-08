@@ -9,22 +9,19 @@ public class WordCountStatisticsGenerator {
 
     public List<Integer> wordLengthMapper(List<String> wordsList){
 
-        List<Integer> wordLengths = wordsList.parallelStream()
-                .map(word -> {
-                    return word.length();
-                })
-                .mapToInt(string -> Integer.valueOf(string))
+        return wordsList.parallelStream()
+                .map(String::length)
+                .mapToInt(Integer::valueOf)
                 .boxed()
                 .filter(length -> length != 0)
                 .collect(Collectors.toList());
-        return wordLengths;
     }
 
     public Double averageLength(List<Integer> wordLengths){
-        Double averageCharCount = wordLengths.stream().parallel()
+        return wordLengths.stream().parallel()
                 .mapToInt(integer -> integer)
-                .average().getAsDouble();
-        return averageCharCount;
+                .average()
+                .getAsDouble();
     }
 
     public Long wordCount(List<Integer> wordLengths){
@@ -46,13 +43,11 @@ public class WordCountStatisticsGenerator {
 
     }
 
-    public List<Integer> lengthWithHighestFrequecy(Map<Integer, Long> countMap, Long highestFrequency){
+    public List<Integer> lengthWithHighestFrequency(Map<Integer, Long> countMap, Long highestFrequency){
         return countMap
                 .keySet()
                 .stream()
-                .collect(Collectors.partitioningBy(e -> {
-                            return countMap.get(e).equals(highestFrequency);
-                        })
+                .collect(Collectors.partitioningBy(e -> countMap.get(e).equals(highestFrequency))
                 )
                 .get(true);
     }

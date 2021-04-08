@@ -11,10 +11,15 @@ import java.util.stream.Stream;
 
 public class WordCounter {
 
-    private WordCountStatisticsGenerator wordCountStatisticsGenerator;
+    private final WordCountStatisticsGenerator WORDCOUNT_STATISTICS_GENERATOR;
+
+    private static final String ALPHABET_POTENTIAL_HYPHEN_REGEX = "[a-zA-Z]+([-][a-zA-Z]+)*";
+    private static final String DATE_FORMATTED_NUMBER_REGEX = "[0-9]{2}\\/[0-9]{2}\\/[0-9]{2}([0-9]{2})?";
+    private static final String NUMBER_INCLUDING_DECIMAL_AND_UNITS_REGEX = "[0-9]+([.,][0-9]+)([a-zA-Z]{0,4}([p\\/][a-zA-Z]{0,4})?)?";
+    private static final String AMPERSAND_REGEX = "&";
 
     public WordCounter(WordCountStatisticsGenerator wordCountStatisticsGenerator){
-        this.wordCountStatisticsGenerator = wordCountStatisticsGenerator;
+        this.WORDCOUNT_STATISTICS_GENERATOR = wordCountStatisticsGenerator;
     }
 
     public FileWordStatistics count(String filePath){
@@ -23,31 +28,34 @@ public class WordCounter {
 
             List<String> wordsList = stream.parallel()
                     //Remove Grouped Punctuation
-                    .map(line -> line.replaceAll("[^a-zA-Z\\d\\s\\/&\\-.]", ""))
-                    //Reduce whitespace preceeding punctation to a " "
-                    .map(line -> line.replaceAll("[^a-zA-Z\\d\\s&] +", " "))
-                    //Reduce whitespace proceeding punctation to a " "
-                    .map(line -> line.replaceAll(" +[^a-zA-Z\\d\\s&]", " "))
                     .map(line -> line.split(" "))
                     .map(words -> Arrays.stream(words).collect(Collectors.toList()))
-                    .flatMap(list -> list.stream().map(integer -> integer))
+                    .flatMap(Collection::stream)
+                    //Only raw words at this point - so filter to only words
+                    .filter(word -> word.matches(ALPHABET_POTENTIAL_HYPHEN_REGEX+"|"
+                            +DATE_FORMATTED_NUMBER_REGEX+"|"
+                            +NUMBER_INCLUDING_DECIMAL_AND_UNITS_REGEX+"|"
+                            +AMPERSAND_REGEX))
                     .collect(Collectors.toList());
 
-            List<Integer> wordLengths = wordCountStatisticsGenerator.wordLengthMapper(wordsList);
+            if (wordsList.size() == 0) return new FileWordStatistics(filePath,
+                    0d,
+                    0L,
+                    Map.of(0,0L),
+                    Set.of(0));
 
-            Double averageLength = wordCountStatisticsGenerator.averageLength(wordLengths);
-            Long wordCount = wordCountStatisticsGenerator.wordCount(wordLengths);
-            Map<Integer, Long> countMap = wordCountStatisticsGenerator.wordLengthFrequency(wordLengths);
+            List<Integer> wordLengths = WORDCOUNT_STATISTICS_GENERATOR.wordLengthMapper(wordsList);
+            Double averageLength = WORDCOUNT_STATISTICS_GENERATOR.averageLength(wordLengths);
+            Long wordCount = WORDCOUNT_STATISTICS_GENERATOR.wordCount(wordLengths);
+            Map<Integer, Long> countMap = WORDCOUNT_STATISTICS_GENERATOR.wordLengthFrequency(wordLengths);
 
-            long highestFrequency = wordCountStatisticsGenerator.highestFrequency(countMap);
-            List<Integer> lengthWithHighestFrequency = wordCountStatisticsGenerator.lengthWithHighestFrequecy(countMap, highestFrequency);
+            long highestFrequency = WORDCOUNT_STATISTICS_GENERATOR.highestFrequency(countMap);
+            List<Integer> lengthWithHighestFrequency = WORDCOUNT_STATISTICS_GENERATOR.lengthWithHighestFrequency(countMap, highestFrequency);
 
-            FileWordStatistics fileWordStatistics =
-                    new FileWordStatistics(filePath, averageLength, wordCount, countMap, new HashSet<>(lengthWithHighestFrequency));
-
-            return fileWordStatistics;
+            return new FileWordStatistics(filePath, averageLength, wordCount, countMap, new HashSet<>(lengthWithHighestFrequency));
 
         } catch (IOException e) {
+            System.out.println("There seems to be an issue counting the words in file: "+filePath);
             e.printStackTrace();
             return null;
         }

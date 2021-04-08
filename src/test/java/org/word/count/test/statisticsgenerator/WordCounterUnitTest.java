@@ -34,13 +34,13 @@ public class WordCounterUnitTest {
     private static final long EXPECTED_COUNT = 9;
     private static final Double EXPECTED_AVERAGE=4.556;
     private static final Map<Integer, Long> EXPECTED_FREQUENCIES = new HashMap<>() {{
-        put(1,1l);
-        put(2,1l);
-        put(3,1l);
-        put(4,2l);
-        put(5,2l);
-        put(7,1l);
-        put(10,1l);
+        put(1,1L);
+        put(2,1L);
+        put(3,1L);
+        put(4,2L);
+        put(5,2L);
+        put(7,1L);
+        put(10,1L);
     }};
     private static final List<Integer> EXPECTED_MOST_FREQUENT = new ArrayList<>(){{
         add(4);
@@ -65,8 +65,8 @@ public class WordCounterUnitTest {
 
         when(wordCountStatisticsGenerator.wordCount(any())).thenReturn(EXPECTED_COUNT);
         when(wordCountStatisticsGenerator.averageLength(any())).thenReturn(EXPECTED_AVERAGE);
-        when(wordCountStatisticsGenerator.lengthWithHighestFrequecy(any(), any())).thenReturn(EXPECTED_MOST_FREQUENT);
-        when(wordCountStatisticsGenerator.highestFrequency(any())).thenReturn(2l);
+        when(wordCountStatisticsGenerator.lengthWithHighestFrequency(any(), any())).thenReturn(EXPECTED_MOST_FREQUENT);
+        when(wordCountStatisticsGenerator.highestFrequency(any())).thenReturn(2L);
         when(wordCountStatisticsGenerator.wordLengthFrequency(any())).thenReturn(EXPECTED_FREQUENCIES);
 
         Path fileToUse = directory.resolve(EXAMPLE_FILENAME);
@@ -76,7 +76,7 @@ public class WordCounterUnitTest {
         FileWordStatistics fileWordStatistics = wordCounter.count(fileToUse.toString());
 
         assertEquals(EXPECTED_COUNT, (long) fileWordStatistics.getWordCount());
-        assertEquals(EXPECTED_AVERAGE.toString(), String.format("%.3f",fileWordStatistics.getAveragelength()));
+        assertEquals(EXPECTED_AVERAGE.toString(), String.format("%.3f",fileWordStatistics.getAverageLength()));
         assertEquals(EXPECTED_FREQUENCIES, fileWordStatistics.getLengthDistribution());
         assertEquals(EXPECTED_MOST_FREQUENT_IN_MODEL, fileWordStatistics.getMostFrequent());
     }

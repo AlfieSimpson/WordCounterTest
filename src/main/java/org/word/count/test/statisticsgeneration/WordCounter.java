@@ -22,6 +22,11 @@ public class WordCounter {
         this.WORDCOUNT_STATISTICS_GENERATOR = wordCountStatisticsGenerator;
     }
 
+    /**
+     * Given a filepath, read the words from that file, and calculate relevant statistics concerning those words
+     * @param filePath  - The absolute path of the File to read
+     * @return          - The {@Code FileWordStatistics} containing some statistics about the words within the given file
+     */
     public FileWordStatistics count(String filePath){
 
         try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
